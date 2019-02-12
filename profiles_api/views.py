@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status #status contains list of different http response status codes(e.g. http404, http505 etc.)
 
 from . import serializers
+from . import models
 
 
 
@@ -95,3 +96,7 @@ class HelloViewSet(viewsets.ViewSet):
 
 
 
+class UserProfileViewSet(viewsets.ModelViewSet): #Handles creating,reading and updating profiles.ModelViewSet of djangorestframework takes care of all the logic for creating,reading and updating model items(really useful for simple apis)
+
+	serializer_class = serializers.UserProfileSerializer
+	queryset = models.UserProfile.objects.all() #queryset tells the viewset how to retrieve the objects from database
