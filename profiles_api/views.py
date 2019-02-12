@@ -4,9 +4,11 @@ from rest_framework import viewsets
 from rest_framework.views import APIView 
 from rest_framework.response import Response
 from rest_framework import status #status contains list of different http response status codes(e.g. http404, http505 etc.)
+from rest_framework.authentication import TokenAuthentication #gives user a temporary token that inserts in the headers of the http request, drs then uses this token to check if user has authenticated with the system
 
 from . import serializers
 from . import models
+from . import permissions
 
 
 
@@ -100,3 +102,5 @@ class UserProfileViewSet(viewsets.ModelViewSet): #Handles creating,reading and u
 
 	serializer_class = serializers.UserProfileSerializer
 	queryset = models.UserProfile.objects.all() #queryset tells the viewset how to retrieve the objects from database
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (permissions.UpdateOwnProfile,) #added , to create them as tupples as we can use multiple authentication classes or permission classes for e.g. we can also use SessionAuthentication
