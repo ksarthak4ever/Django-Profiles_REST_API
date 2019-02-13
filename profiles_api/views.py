@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework import status #status contains list of different http response status codes(e.g. http404, http505 etc.)
 from rest_framework.authentication import TokenAuthentication #gives user a temporary token that inserts in the headers of the http request, drs then uses this token to check if user has authenticated with the system
 from rest_framework import filters # to add search functionality to the api
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.authtoken.views import ObtainAuthToken #These two are used to trick drs into using its login api view as viewsets so we can use our standard default router.By making LoginApi as a viewset we can add it to the api root
 
 from . import serializers
 from . import models
@@ -107,3 +109,12 @@ class UserProfileViewSet(viewsets.ModelViewSet): #Handles creating,reading and u
 	permission_classes = (permissions.UpdateOwnProfile,) #added , to create them as tupples as we can use multiple authentication classes or permission classes for e.g. we can also use SessionAuthentication
 	filter_backends	= (filters.SearchFilter,)
 	search_fields = ('name', 'email',) #which fields we wanna allow the user to filter by, as told in the documentation
+
+
+
+class LoginViewSet(viewsets.ViewSet): #checks email and password and returns an auth token. We could have used standard
+	
+	serializer_class = AuthTokenSerializer
+
+	def create(self, request): #uses the ObtainAuthToken APIView to validate and create a token. create fn is called during http POST request
+		return ObtainAuthToken().post(request) #same as calling ObtainAuthToken normally here we are just calling it through our ViewSet and returning the response in the create fn.
