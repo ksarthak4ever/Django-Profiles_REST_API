@@ -8,6 +8,8 @@ from rest_framework.authentication import TokenAuthentication #gives user a temp
 from rest_framework import filters # to add search functionality to the api
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.views import ObtainAuthToken #These two are used to trick drs into using its login api view as viewsets so we can use our standard default router.By making LoginApi as a viewset we can add it to the api root
+from rest_framework.permissions import IsAuthenticatedOrReadOnly # so one wont be able to create new object/feed unless they are logged in in the system but still be able to see already posted feeds
+from rest_framework.permissions import IsAuthenticated #so only registered users can see other users feeds and post feeds
 
 from . import serializers
 from . import models
@@ -118,3 +120,15 @@ class LoginViewSet(viewsets.ViewSet): #checks email and password and returns an 
 
 	def create(self, request): #uses the ObtainAuthToken APIView to validate and create a token. create fn is called during http POST request
 		return ObtainAuthToken().post(request) #same as calling ObtainAuthToken normally here we are just calling it through our ViewSet and returning the response in the create fn.
+
+
+
+class UserProfileFeedViewSet(viewsets.ModelViewSet): #Handles creating,reading and updating profile feed items.
+
+	authentication_classes = (TokenAuthentication,)
+	serializer_class = serializers.ProfileFeedItemSerializer
+	queryset = models.ProfileFeedItem.objects.all()
+	permission_classes = (permissions.PostOwnStatus, IsAuthenticated)
+
+	def perform_create(self, serializer): #sets the user profile to the logged in user. As in DRS when a new obejct is created we have to manually set the the object to the user profile currently logged in.
+		serializer.save(user_profile=self.request.user)
