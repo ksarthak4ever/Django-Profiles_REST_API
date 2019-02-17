@@ -19,4 +19,4 @@ This is a REST API providing basic functionality for managing user profiles and 
 
 ## Some Blogs i wrote while creating this API
 
-* RESTful API(https://medium.com/@ksarthak4ever/restful-api-1a49417729a8)
+* [RESTful API](https://medium.com/@ksarthak4ever/restful-api-1a49417729a8)
