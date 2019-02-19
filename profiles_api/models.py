@@ -4,7 +4,7 @@ from django.contrib.auth.models import PermissionsMixin #to add permissions to u
 from django.contrib.auth.models import BaseUserManager
 
 
-class UserProfileManager(BaseUserManager): #It helps in teaching django how to use our new/custom UserProfile model
+class UserProfileManager(BaseUserManager): #That is Manager Class for new custom user model,It helps in teaching django how to use our new/custom UserProfile model
 	
 	def create_user(self,email,name,password=None): #creates a new user profile object.
 		if not email:
@@ -28,7 +28,7 @@ class UserProfileManager(BaseUserManager): #It helps in teaching django how to u
 		
 
 
-class UserProfile(AbstractBaseUser, PermissionsMixin): #Used to represent a user profile inside our system or overwrite the existing user model made by django as in our api we want user to login through emails
+class UserProfile(AbstractBaseUser, PermissionsMixin): #That is actually creating User using this Class,Used to represent a user profile inside our system or overwrite the existing user model made by django as in our api we want user to login through emails
 	email = models.EmailField(max_length=200, unique=True)
 	name = models.CharField(max_length=200)
 	is_active = models.BooleanField(default=True) #to see if user is currently active in the system and is a requirement when creating custom user model
